@@ -1,0 +1,16 @@
+{
+  "name": "talk-gbforth",
+  "version": "1.0.0",
+  "description": "Slides for gbforth talk",
+  "main": "index.js",
+  "repository": "https://github.com/ams-hackers/talk-gbforth",
+  "author": "Tijn Kersjes <tijn@divbyzero.nl>",
+  "scripts": {
+    "build": "cleaver index.md --output index.html",
+    "watch": "cleaver watch index.md --output index.html"
+  },
+  "private": true,
+  "dependencies": {
+    "cleaver": "^0.8.7"
+  }
+}
