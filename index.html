@@ -557,6 +557,204 @@ blockquote {
 <p><img src="gbschematic.jpg" alt="background"></p>
 </section>
   </div>
+  <div class="slide hidden -" id="slide-2">
+    <section class="slide-content"><h1 id="game-boy-hardware">Game Boy hardware</h1>
+<ul>
+<li>8-bit CPU</li>
+<li>4 MHz (~1M instructions)</li>
+<li>32kB ROM (of which 16 bankable)</li>
+<li>4kB RAM</li>
+<li>Cartridge contains data + hardware</li>
+</ul>
+<p><img src="memmap.gif" alt="memmap"></p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-3">
+    <section class="slide-content"><p><img src="draw.png" alt="draw"></p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-4">
+    <section class="slide-content"><h1 id="forth">Forth</h1>
+<ul>
+<li>Stack based</li>
+<li>Concatenative</li>
+</ul>
+<pre><code class="lang-fs">: INC
+  <span class="hljs-number">1</span> + ;
+</code></pre>
+<pre><code>1   =&gt;  PUSH 1
++   =&gt;  CALL +
+</code></pre></section>
+  </div>
+  <div class="slide hidden -" id="slide-5">
+    <section class="slide-content"><h1 id="approaches-we-considered">Approaches we considered</h1>
+<ul>
+<li>Read docs about GB</li>
+<li>Start writing a compiler</li>
+<li>...wait forever until you get something on the screen</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-6">
+    <section class="slide-content"><h1 id="-downsides">...downsides</h1>
+<ul>
+<li>Not incremental</li>
+<li>Long feedback cycle</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-7">
+    <section class="slide-content"><h1 id="our-approach">Our approach</h1>
+<ol>
+<li>Start with working game (binary)</li>
+<li>Make Forth emit those bytes</li>
+<li>Reverse engineer + refactor bytes<ul>
+<li>Add abstractions</li>
+<li>Build libraries</li>
+</ul>
+</li>
+<li>Forth compiler -&gt; GB binary</li>
+</ol>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-8">
+    <section class="slide-content"><p><img src="helloworld.png" alt="helloworld"></p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-9">
+    <section class="slide-content"><h2 id="reverse-engineer-binary-to-assembly">Reverse-engineer binary to assembly</h2>
+<pre><code>$00  $c3  $50  $01  $ce  $ed  $66  $66
+$cc  $0d  $00  $0b  $03  $73  $00  $83
+$00  $0c  $00  $0d  $00  $08  $11  $1f
+$88  $89  $00  $0e  $dc  $cc  $6e  $e6
+$dd  $dd  $d9  $99  $bb  $bb  $67  $63
+$6e  $0e  $ec  $cc  $dd  $dc  $99  $9f
+$bb  $b9  $33  $3e  $45  $58  $41  $4d
+$50  $4c  $45  $00  $00  $00  $00  $00
+$00  $00  $00  $00  $00  $00  $00  $00
+$00  $00  $01  $33
+</code></pre></section>
+  </div>
+  <div class="slide hidden -" id="slide-10">
+    <section class="slide-content"><h2 id="make-program-that-emits-bytes">Make program that emits bytes</h2>
+<pre style='font-family: "Monaco", monospace'>
+$00 c, $c3 c, $50 c, $01 c, $ce c, $ed c, $66 c, $66 c,
+$cc c, $0d c, $00 c, $0b c, $03 c, $73 c, $00 c, $83 c,
+$00 c, $0c c, $00 c, $0d c, $00 c, $08 c, $11 c, $1f c,
+$88 c, $89 c, $00 c, $0e c, $dc c, $cc c, $6e c, $e6 c,
+$dd c, $dd c, $d9 c, $99 c, $bb c, $bb c, $67 c, $63 c,
+$6e c, $0e c, $ec c, $cc c, $dd c, $dc c, $99 c, $9f c,
+$bb c, $b9 c, $33 c, $3e c, $45 c, $58 c, $41 c, $4d c,
+$50 c, $4c c, $45 c, $00 c, $00 c, $00 c, $00 c, $00 c,
+$00 c, $00 c, $00 c, $00 c, $00 c, $00 c, $00 c, $00 c,
+$00 c, $00 c, $01 c, $33 c,
+</pre></section>
+  </div>
+  <div class="slide hidden -" id="slide-11">
+    <section class="slide-content"><h2 id="find-the-patterns-and-meaning">Find the patterns and meaning</h2>
+<pre style='font-family: "Monaco", monospace'>
+$00 c, $c3 c, $50 c, $01 c, <span style="color: #AA00AA">$ce c, $ed c, $66 c, $66 c,
+$cc c, $0d c, $00 c, $0b c, $03 c, $73 c, $00 c, $83 c,
+$00 c, $0c c, $00 c, $0d c, $00 c, $08 c, $11 c, $1f c,
+$88 c, $89 c, $00 c, $0e c, $dc c, $cc c, $6e c, $e6 c,
+$dd c, $dd c, $d9 c, $99 c, $bb c, $bb c, $67 c, $63 c,
+$6e c, $0e c, $ec c, $cc c, $dd c, $dc c, $99 c, $9f c,
+$bb c, $b9 c, $33 c, $3e c,</span> <span style="color: #00AA00">$45 c, $58 c, $41 c, $4d c,
+$50 c, $4c c, $45 c, $00 c, $00 c, $00 c, $00 c, $00 c,
+$00 c, $00 c, $00 c, $00 c, $00 c, $00 c, $00 c, $00 c,</span>
+$00 c, $00 c, $01 c, $33 c,
+</pre></section>
+  </div>
+  <div class="slide hidden -" id="slide-12">
+    <section class="slide-content"><h2 id="extract-patterns-into-definitions">Extract patterns into definitions</h2>
+<pre style='font-family: "Monaco", monospace'>
+<span style="color: #AA00AA">: logo
+  $ce c, $ed c, $66 c, $66 c, $cc c, $0d c, $00 c, $0b c,
+  $03 c, $73 c, $00 c, $83 c, $00 c, $0c c, $00 c, $0d c,
+  $00 c, $08 c, $11 c, $1f c, $88 c, $89 c, $00 c, $0e c,
+  $dc c, $cc c, $6e c, $e6 c, $dd c, $dd c, $d9 c, $99 c,
+  $bb c, $bb c, $67 c, $63 c, $6e c, $0e c, $ec c, $cc c,
+  $dd c, $dc c, $99 c, $9f c, $bb c, $b9 c, $33 c, $3e c, ;</span>
+
+<span style="color: #00AA00">: title
+  $45 c, $58 c, $41 c, $4d c, $50 c, $4c c, $45 c, $00 c,
+  $00 c, $00 c, $00 c, $00 c, $00 c, $00 c, $00 c, $00 c, ;</span>
+
+$00 c, $c3 c, $50 c, $01 c,
+<span style="color: #AA00AA">logo</span>
+<span style="color: #00AA00">title</span>
+$00 c, $00 c, $01 c, $33 c,
+
+</pre></section>
+  </div>
+  <div class="slide hidden -" id="slide-13">
+    <section class="slide-content"><p><img src="asm.png" alt="asm"></p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-14">
+    <section class="slide-content"><h2 id="full-forth-assembler-game">Full Forth Assembler &quot;game&quot;</h2>
+<pre style='font-family: "Monaco", monospace'>
+<span style="color: #00AA00">title: EXAMPLE</span>
+
+$150 ==>
+main:
+
+di,
+$ffff # sp ld,
+
+%11100100 # a ld,
+
+a [rGBP] ld,
+
+0 # a ld,
+a [rSCX] ld,
+a [rSCY] ld,
+
+<span style="color: #777777">( ... )</span>
+</pre></section>
+  </div>
+  <div class="slide hidden -" id="slide-15">
+    <section class="slide-content"><p><img src="helloworld.png" alt="helloworld"></p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-16">
+    <section class="slide-content"><h1 id="now-what-">Now what?</h1>
+<h2 id="implementing-forth">Implementing Forth</h2>
+<ul>
+<li>Break binary compatibility</li>
+<li>New testing strategy<ul>
+<li>Unit tests</li>
+<li>Visual comparison</li>
+</ul>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-17">
+    <section class="slide-content"><h1 id="implementing-forth">Implementing Forth</h1>
+<ul>
+<li>Add a compiler</li>
+<li>Implement code primitives</li>
+<li>Using emulator for automated testing</li>
+<li>Adding libraries</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-18">
+    <section class="slide-content"><p><img src="forth.png" alt="forth"></p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-19">
+    <section class="slide-content"><p><img src="tweet1.png" alt="tweet1"></p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-20">
+    <section class="slide-content"><p><img src="tweet2.png" alt="tweet2"></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-21">
+    <section class="slide-content"></section>
+  </div>
 
 
 
