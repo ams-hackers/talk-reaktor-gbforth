@@ -6,12 +6,12 @@ theme: tkers/cleaver-theme-sunset
 ---
 
 # GBForth
-## Friday Talks November
+## A Forth-based Game Boy development kit
 ![background](gbschematic.jpg)
 
 ---
 
-# Game Boy hardware
+### Game Boy hardware
 - 8-bit CPU
 - 4 MHz (~1M instructions)
 - 32kB ROM (of which 16 bankable)
@@ -22,12 +22,11 @@ theme: tkers/cleaver-theme-sunset
 
 ---
 
-
 ![draw](draw.png)
 
 ---
 
-# Forth
+### Forth
 
 - Stack based
 - Concatenative
@@ -37,9 +36,11 @@ theme: tkers/cleaver-theme-sunset
   1 + ;
 ```
 
+Only **numbers** and **words**:
+
 ```
-1   =>  PUSH 1
-+   =>  CALL +
+1   →   PUSH 1
++   →   CALL +
 ```
 
 ---
@@ -51,19 +52,21 @@ theme: tkers/cleaver-theme-sunset
 
 ---
 
-# ...downsides
+# However...
 - Not incremental
 - Long feedback cycle
 
+# 😕
+
 ---
 
-# Our approach
-1. Start with working game (binary)
-2. Make Forth emit those bytes
-3. Reverse engineer + refactor bytes
+# Our approach ✨
+- Start with working game (binary)
+- Make Forth emit those bytes
+- Reverse engineer + refactor bytes
   - Add abstractions
   - Build libraries
-4. Forth compiler -> GB binary
+- Forth compiler → GB binary
 
 ---
 
@@ -73,7 +76,7 @@ theme: tkers/cleaver-theme-sunset
 
 ## Reverse-engineer binary to assembly
 
-```
+<pre style='font-family: "Monaco", monospace'>
 $00  $c3  $50  $01  $ce  $ed  $66  $66
 $cc  $0d  $00  $0b  $03  $73  $00  $83
 $00  $0c  $00  $0d  $00  $08  $11  $1f
@@ -84,7 +87,7 @@ $bb  $b9  $33  $3e  $45  $58  $41  $4d
 $50  $4c  $45  $00  $00  $00  $00  $00
 $00  $00  $00  $00  $00  $00  $00  $00
 $00  $00  $01  $33
-```
+</pre>
 
 ---
 
@@ -146,6 +149,7 @@ $00 c, $00 c, $01 c, $33 c,
 
 ---
 
+## Implement assembler
 ![asm](asm.png)
 
 ---
@@ -188,11 +192,12 @@ a [rSCY] ld,
 
 ---
 
-# Implementing Forth
+### Implementing Forth
 - Add a compiler
 - Implement code primitives
 - Using emulator for automated testing
 - Adding libraries
+- Replacing ASM with Forth
 
 ---
 
