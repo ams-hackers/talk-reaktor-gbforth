@@ -19,6 +19,11 @@ theme: tkers/cleaver-theme-sunset
 - Cartridge contains data + hardware
 
 ![memmap](memmap.gif)
+*<span style="color: #EB3223">ROM</span>
+<span style="background-color: #72FBFD">Tile RAM</span>
+<span style="color: #0022F5;">BG Map</span>
+<span style="background-color: #FFFD54;">RAM</span>
+<span style="color: #CC36D8">OAM</span>*
 
 ---
 
@@ -182,7 +187,11 @@ a [rSCY] ld,
 
 ---
 
-# Now what?
+![helloreaktor](helloreaktor.jpg)
+
+---
+
+# Now what? 🤔
 ## Implementing Forth
 
 - Break binary compatibility
@@ -205,27 +214,63 @@ a [rSCY] ld,
 
 ---
 
+# The final test 💪
+## Compiling a third party Forth game...
+## &nbsp;
+
+```fs
+\ sokoban - a maze game in FORTH
+
+\ Copyright (C) 1995,1997,1998,2003,2007,2012,2013,2015
+\ Free Software Foundation, Inc.
+
+\ This file is part of Gforth.
+
+40 Constant /maze  \ maximal maze line
+
+Create maze  1 cells allot /maze 25 * allot  \ current maze
+Variable mazes   0 mazes !  \ root pointer
+Variable soko    0 soko !   \ player position
+Variable >maze   0 >maze !  \ current compiled maze
+
+: maze-field ( -- addr n )
+    maze dup cell+ swap @ chars ;
+
+: .score ( -- )
+    ." Level: " level# @ 2 .r ."  Score: " score @ 4 .r
+    ."  Moves: " moves @ 6 .r ."  Rocks: " rocks @ 2 .r ;
+
+: .maze ( -- )  \ display maze
+    0 0 at-xy  .score
+    cr  maze-field over + swap
+    DO  I /maze type cr  /maze chars  +LOOP ;
+```
+
+---
+
 ![tweet1](tweet1.png)
 
 ---
 
 ![tweet2](tweet2.png)
 
+---
+
+### Future development 🚀
+
+- ASM bug fixes
+- Compiler optimisations
+- GB Color support
+- Declaritive RAM initialisation
+- Automatic ROM bank switching
+- Debugging tools
+- ...
 
 
+---
 
+# 🤓 More?
 
-
-
-
-
-
-
-
-
-
-
-
-
-
---
+- [ams-hackers/gbforth](https://ams-hackers.github.io/gbforth)
+- [The Ultimate Game Boy Talk (33c3)](https://www.youtube.com/watch?v=HyzD8pNlpwI)
+- Join **#amsterdam-hacking**

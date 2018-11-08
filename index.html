@@ -553,12 +553,12 @@ blockquote {
 
   <div class="slide -" id="slide-1">
     <section class="slide-content"><h1 id="gbforth">GBForth</h1>
-<h2 id="friday-talks-november">Friday Talks November</h2>
+<h2 id="a-forth-based-game-boy-development-kit">A Forth-based Game Boy development kit</h2>
 <p><img src="gbschematic.jpg" alt="background"></p>
 </section>
   </div>
   <div class="slide hidden -" id="slide-2">
-    <section class="slide-content"><h1 id="game-boy-hardware">Game Boy hardware</h1>
+    <section class="slide-content"><h3 id="game-boy-hardware">Game Boy hardware</h3>
 <ul>
 <li>8-bit CPU</li>
 <li>4 MHz (~1M instructions)</li>
@@ -566,7 +566,12 @@ blockquote {
 <li>4kB RAM</li>
 <li>Cartridge contains data + hardware</li>
 </ul>
-<p><img src="memmap.gif" alt="memmap"></p>
+<p><img src="memmap.gif" alt="memmap">
+<em><span style="color: #EB3223">ROM</span>
+<span style="background-color: #72FBFD">Tile RAM</span>
+<span style="color: #0022F5;">BG Map</span>
+<span style="background-color: #FFFD54;">RAM</span>
+<span style="color: #CC36D8">OAM</span></em></p>
 </section>
   </div>
   <div class="slide hidden -" id="slide-3">
@@ -574,7 +579,7 @@ blockquote {
 </section>
   </div>
   <div class="slide hidden -" id="slide-4">
-    <section class="slide-content"><h1 id="forth">Forth</h1>
+    <section class="slide-content"><h3 id="forth">Forth</h3>
 <ul>
 <li>Stack based</li>
 <li>Concatenative</li>
@@ -582,8 +587,9 @@ blockquote {
 <pre><code class="lang-fs">: INC
   <span class="hljs-number">1</span> + ;
 </code></pre>
-<pre><code>1   =&gt;  PUSH 1
-+   =&gt;  CALL +
+<p>Only <strong>numbers</strong> and <strong>words</strong>:</p>
+<pre><code>1   →   PUSH 1
++   →   CALL +
 </code></pre></section>
   </div>
   <div class="slide hidden -" id="slide-5">
@@ -596,16 +602,17 @@ blockquote {
 </section>
   </div>
   <div class="slide hidden -" id="slide-6">
-    <section class="slide-content"><h1 id="-downsides">...downsides</h1>
+    <section class="slide-content"><h1 id="however-">However...</h1>
 <ul>
 <li>Not incremental</li>
 <li>Long feedback cycle</li>
 </ul>
+<h1 id="-">😕</h1>
 </section>
   </div>
   <div class="slide hidden -" id="slide-7">
-    <section class="slide-content"><h1 id="our-approach">Our approach</h1>
-<ol>
+    <section class="slide-content"><h1 id="our-approach-">Our approach ✨</h1>
+<ul>
 <li>Start with working game (binary)</li>
 <li>Make Forth emit those bytes</li>
 <li>Reverse engineer + refactor bytes<ul>
@@ -613,8 +620,8 @@ blockquote {
 <li>Build libraries</li>
 </ul>
 </li>
-<li>Forth compiler -&gt; GB binary</li>
-</ol>
+<li>Forth compiler → GB binary</li>
+</ul>
 </section>
   </div>
   <div class="slide hidden -" id="slide-8">
@@ -623,7 +630,8 @@ blockquote {
   </div>
   <div class="slide hidden -" id="slide-9">
     <section class="slide-content"><h2 id="reverse-engineer-binary-to-assembly">Reverse-engineer binary to assembly</h2>
-<pre><code>$00  $c3  $50  $01  $ce  $ed  $66  $66
+<pre style='font-family: "Monaco", monospace'>
+$00  $c3  $50  $01  $ce  $ed  $66  $66
 $cc  $0d  $00  $0b  $03  $73  $00  $83
 $00  $0c  $00  $0d  $00  $08  $11  $1f
 $88  $89  $00  $0e  $dc  $cc  $6e  $e6
@@ -633,7 +641,7 @@ $bb  $b9  $33  $3e  $45  $58  $41  $4d
 $50  $4c  $45  $00  $00  $00  $00  $00
 $00  $00  $00  $00  $00  $00  $00  $00
 $00  $00  $01  $33
-</code></pre></section>
+</pre></section>
   </div>
   <div class="slide hidden -" id="slide-10">
     <section class="slide-content"><h2 id="make-program-that-emits-bytes">Make program that emits bytes</h2>
@@ -688,7 +696,8 @@ $00 c, $00 c, $01 c, $33 c,
 </pre></section>
   </div>
   <div class="slide hidden -" id="slide-13">
-    <section class="slide-content"><p><img src="asm.png" alt="asm"></p>
+    <section class="slide-content"><h2 id="implement-assembler">Implement assembler</h2>
+<p><img src="asm.png" alt="asm"></p>
 </section>
   </div>
   <div class="slide hidden -" id="slide-14">
@@ -718,7 +727,11 @@ a [rSCY] ld,
 </section>
   </div>
   <div class="slide hidden -" id="slide-16">
-    <section class="slide-content"><h1 id="now-what-">Now what?</h1>
+    <section class="slide-content"><p><img src="helloreaktor.jpg" alt="helloreaktor"></p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-17">
+    <section class="slide-content"><h1 id="now-what-">Now what? 🤔</h1>
 <h2 id="implementing-forth">Implementing Forth</h2>
 <ul>
 <li>Break binary compatibility</li>
@@ -730,30 +743,82 @@ a [rSCY] ld,
 </ul>
 </section>
   </div>
-  <div class="slide hidden -" id="slide-17">
-    <section class="slide-content"><h1 id="implementing-forth">Implementing Forth</h1>
+  <div class="slide hidden -" id="slide-18">
+    <section class="slide-content"><h3 id="implementing-forth">Implementing Forth</h3>
 <ul>
 <li>Add a compiler</li>
 <li>Implement code primitives</li>
 <li>Using emulator for automated testing</li>
 <li>Adding libraries</li>
+<li>Replacing ASM with Forth</li>
 </ul>
 </section>
   </div>
-  <div class="slide hidden -" id="slide-18">
+  <div class="slide hidden -" id="slide-19">
     <section class="slide-content"><p><img src="forth.png" alt="forth"></p>
 </section>
   </div>
-  <div class="slide hidden -" id="slide-19">
+  <div class="slide hidden -" id="slide-20">
+    <section class="slide-content"><h1 id="the-final-test-">The final test 💪</h1>
+<h2 id="compiling-a-third-party-forth-game-">Compiling a third party Forth game...</h2>
+<h2 id="">&nbsp;</h2>
+<pre><code class="lang-fs">\ sokoban - a maze game <span class="hljs-keyword">in</span> FORTH
+
+\ Copyright (C) <span class="hljs-number">1995</span>,<span class="hljs-number">1997</span>,<span class="hljs-number">1998</span>,<span class="hljs-number">2003</span>,<span class="hljs-number">2007</span>,<span class="hljs-number">2012</span>,<span class="hljs-number">2013</span>,<span class="hljs-number">2015</span>
+\ Free Software Foundation, Inc.
+
+\ This file is part <span class="hljs-keyword">of</span> Gforth.
+
+<span class="hljs-number">40</span> Constant /maze  \ maximal maze line
+
+Create maze  <span class="hljs-number">1</span> cells allot /maze <span class="hljs-number">25</span> * allot  \ current maze
+Variable mazes   <span class="hljs-number">0</span> mazes !  \ root pointer
+Variable soko    <span class="hljs-number">0</span> soko !   \ player position
+Variable &gt;maze   <span class="hljs-number">0</span> &gt;maze !  \ current compiled maze
+
+: maze-field ( -- addr n )
+    maze dup cell+ swap @ chars ;
+
+: .score ( -- )
+    .<span class="hljs-string">" Level: "</span> level# @ <span class="hljs-number">2</span> .r .<span class="hljs-string">"  Score: "</span> score @ <span class="hljs-number">4</span> .r
+    .<span class="hljs-string">"  Moves: "</span> moves @ <span class="hljs-number">6</span> .r .<span class="hljs-string">"  Rocks: "</span> rocks @ <span class="hljs-number">2</span> .r ;
+
+: .maze ( -- )  \ display maze
+    <span class="hljs-number">0</span> <span class="hljs-number">0</span> at-xy  .score
+    cr  maze-field over + swap
+    DO  I /maze <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">cr</span>  /<span class="hljs-title">maze</span> <span class="hljs-title">chars</span>  +<span class="hljs-title">LOOP</span> ;</span>
+</code></pre>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-21">
     <section class="slide-content"><p><img src="tweet1.png" alt="tweet1"></p>
 </section>
   </div>
-  <div class="slide hidden -" id="slide-20">
+  <div class="slide hidden -" id="slide-22">
     <section class="slide-content"><p><img src="tweet2.png" alt="tweet2"></p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-21">
-    <section class="slide-content"></section>
+  <div class="slide hidden -" id="slide-23">
+    <section class="slide-content"><h3 id="future-development-">Future development 🚀</h3>
+<ul>
+<li>ASM bug fixes</li>
+<li>Compiler optimisations</li>
+<li>GB Color support</li>
+<li>Declaritive RAM initialisation</li>
+<li>Automatic ROM bank switching</li>
+<li>Debugging tools</li>
+<li>...</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-24">
+    <section class="slide-content"><h1 id="-more-">🤓 More?</h1>
+<ul>
+<li><a href="https://ams-hackers.github.io/gbforth">ams-hackers/gbforth</a></li>
+<li><a href="https://www.youtube.com/watch?v=HyzD8pNlpwI">The Ultimate Game Boy Talk (33c3)</a></li>
+<li>Join <strong>#amsterdam-hacking</strong></li>
+</ul>
+</section>
   </div>
 
 
