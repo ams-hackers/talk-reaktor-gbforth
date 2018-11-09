@@ -199,13 +199,14 @@ a [rSCY] ld,
 - New testing strategy
   - Unit tests
   - Visual comparison
+  - Using emulator for automated testing
+- Rewriting *Hello World* to Forth
 
 --
 
 ### Implementing Forth
 - Add a compiler
 - Implement code primitives
-- Using emulator for automated testing
 - Adding libraries
 - Replacing ASM with Forth
 
@@ -265,6 +266,7 @@ Variable >maze   0 >maze !  \ current compiled maze
 - Declaritive RAM initialisation
 - Automatic ROM bank switching
 - Debugging tools
+- **Actually writing a game**
 - ...
 
 
