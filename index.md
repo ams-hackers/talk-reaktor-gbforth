@@ -268,10 +268,12 @@ Variable >maze   0 >maze !  \ current compiled maze
 - ...
 
 
---
+-- dark
 
 # 🤓 More?
 
 - [ams-hackers/gbforth](https://ams-hackers.github.io/gbforth)
 - [The Ultimate Game Boy Talk (33c3)](https://www.youtube.com/watch?v=HyzD8pNlpwI)
 - Join **#amsterdam-hacking**
+
+![background](gbschematic2.jpg)
