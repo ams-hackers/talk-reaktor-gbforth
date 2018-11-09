@@ -3,13 +3,13 @@ controls: false
 progress: true
 theme: tkers/cleaver-theme-sunset
 
----
+--
 
 # GBForth
 ## A Forth-based Game Boy development kit
 ![background](gbschematic.jpg)
 
----
+--
 
 ### Game Boy hardware
 - 8-bit CPU
@@ -25,11 +25,11 @@ theme: tkers/cleaver-theme-sunset
 <span style="background-color: #FFFD54;">RAM</span>
 <span style="color: #CC36D8">OAM</span>*
 
----
+--
 
 ![draw](draw.png)
 
----
+--
 
 ### Forth
 
@@ -48,14 +48,14 @@ Only **numbers** and **words**:
 +   →   CALL +
 ```
 
----
+--
 
 # Approaches we considered
 - Read docs about GB
 - Start writing a compiler
 - ...wait forever until you get something on the screen
 
----
+--
 
 # However...
 - Not incremental
@@ -63,7 +63,7 @@ Only **numbers** and **words**:
 
 # 😕
 
----
+--
 
 # Our approach ✨
 - Start with working game (binary)
@@ -73,15 +73,15 @@ Only **numbers** and **words**:
   - Build libraries
 - Forth compiler → GB binary
 
----
+--
 
 ![helloworld](helloworld.png)
 
----
+--
 
 ## Reverse-engineer binary to assembly
 
-<pre style='font-family: "Monaco", monospace'>
+```
 $00  $c3  $50  $01  $ce  $ed  $66  $66
 $cc  $0d  $00  $0b  $03  $73  $00  $83
 $00  $0c  $00  $0d  $00  $08  $11  $1f
@@ -92,13 +92,14 @@ $bb  $b9  $33  $3e  $45  $58  $41  $4d
 $50  $4c  $45  $00  $00  $00  $00  $00
 $00  $00  $00  $00  $00  $00  $00  $00
 $00  $00  $01  $33
-</pre>
+```
 
----
+
+--
 
 ## Make program that emits bytes
 
-<pre style='font-family: "Monaco", monospace'>
+```
 $00 c, $c3 c, $50 c, $01 c, $ce c, $ed c, $66 c, $66 c,
 $cc c, $0d c, $00 c, $0b c, $03 c, $73 c, $00 c, $83 c,
 $00 c, $0c c, $00 c, $0d c, $00 c, $08 c, $11 c, $1f c,
@@ -109,13 +110,13 @@ $bb c, $b9 c, $33 c, $3e c, $45 c, $58 c, $41 c, $4d c,
 $50 c, $4c c, $45 c, $00 c, $00 c, $00 c, $00 c, $00 c,
 $00 c, $00 c, $00 c, $00 c, $00 c, $00 c, $00 c, $00 c,
 $00 c, $00 c, $01 c, $33 c,
-</pre>
+```
 
----
+--
 
 ## Find the patterns and meaning
 
-<pre style='font-family: "Monaco", monospace'>
+<pre>
 $00 c, $c3 c, $50 c, $01 c, <span style="color: #AA00AA">$ce c, $ed c, $66 c, $66 c,
 $cc c, $0d c, $00 c, $0b c, $03 c, $73 c, $00 c, $83 c,
 $00 c, $0c c, $00 c, $0d c, $00 c, $08 c, $11 c, $1f c,
@@ -128,11 +129,11 @@ $00 c, $00 c, $00 c, $00 c, $00 c, $00 c, $00 c, $00 c,</span>
 $00 c, $00 c, $01 c, $33 c,
 </pre>
 
----
+--
 
 ## Extract patterns into definitions
 
-<pre style='font-family: "Monaco", monospace'>
+<pre>
 <span style="color: #AA00AA">: logo
   $ce c, $ed c, $66 c, $66 c, $cc c, $0d c, $00 c, $0b c,
   $03 c, $73 c, $00 c, $83 c, $00 c, $0c c, $00 c, $0d c,
@@ -152,16 +153,16 @@ $00 c, $00 c, $01 c, $33 c,
 
 </pre>
 
----
+--
 
 ## Implement assembler
 ![asm](asm.png)
 
----
+--
 
 ## Full Forth Assembler "game"
 
-<pre style='font-family: "Monaco", monospace'>
+<pre>
 <span style="color: #00AA00">title: EXAMPLE</span>
 
 $150 ==>
@@ -181,15 +182,15 @@ a [rSCY] ld,
 <span style="color: #777777">( ... )</span>
 </pre>
 
----
+--
 
 ![helloworld](helloworld.png)
 
----
+--
 
 ![helloreaktor](helloreaktor.jpg)
 
----
+--
 
 # Now what? 🤔
 ## Implementing Forth
@@ -199,7 +200,7 @@ a [rSCY] ld,
   - Unit tests
   - Visual comparison
 
----
+--
 
 ### Implementing Forth
 - Add a compiler
@@ -208,11 +209,11 @@ a [rSCY] ld,
 - Adding libraries
 - Replacing ASM with Forth
 
----
+--
 
 ![forth](forth.png)
 
----
+--
 
 # The final test 💪
 ## Compiling a third party Forth game...
@@ -246,15 +247,15 @@ Variable >maze   0 >maze !  \ current compiled maze
     DO  I /maze type cr  /maze chars  +LOOP ;
 ```
 
----
+--
 
 ![tweet1](tweet1.png)
 
----
+--
 
 ![tweet2](tweet2.png)
 
----
+--
 
 ### Future development 🚀
 
@@ -267,7 +268,7 @@ Variable >maze   0 >maze !  \ current compiled maze
 - ...
 
 
----
+--
 
 # 🤓 More?
 
